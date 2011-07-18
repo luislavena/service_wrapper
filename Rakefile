@@ -12,6 +12,23 @@ defaults = {
   :debug    => ENV.fetch("DEBUG", false)   # optional debugging
 }
 
+project_task "service_wrapper" do
+  executable  "service_wrapper"
+  build_to    "bin"
+
+  search_path "inc"
+
+  # FIXME: hook mini_servie
+  #lib_path    "lib/win32"
+
+  main        "src/service_wrapper.bas"
+
+  # FIXME: hook mini_service
+  library     "mini_service"
+
+  option defaults
+end
+
 # TODO: hook mini_service as submodule
 task :build => []
 task :rebuild => []
