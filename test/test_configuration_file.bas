@@ -14,9 +14,17 @@ namespace TestConfigurationFile
         delete conf
     end sub
 
+    sub test_ignore_garbage_section
+        var conf = new ConfigurationFile("fixtures/garbage.conf")
+        assert(conf->executable = "valid.exe")
+        assert(conf->arguments = "arg1 arg2 arg3")
+        delete conf
+    end sub
+
     sub run()
         test_read_executable
         test_read_arguments
+        test_ignore_garbage_section
     end sub
 end namespace
 
