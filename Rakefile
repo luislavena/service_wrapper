@@ -32,6 +32,23 @@ project_task "service_wrapper" do
   option defaults
 end
 
+project_task "test_runner" do
+  executable  "runner"
+  build_to    "test"
+
+  search_path "inc"
+  search_path "vendor/mini_service/inc"
+
+  lib_path    "vendor/mini_service/lib/win32"
+
+  main        "test/helper.bas"
+  source      "test/test_*.bas"
+
+  library     "mini_service"
+
+  option defaults
+end
+
 namespace "lib" do
   mini_service_dir  = "vendor/mini_service"
   mini_service_rake = File.join(mini_service_dir, "Rakefile")
@@ -52,6 +69,10 @@ namespace "lib" do
 end
 
 task :build => ["lib:mini_service"]
+task :run => ["test_runner:build"] do
+  sh "test/runner.exe"
+end
+
 task :rebuild => []
 task :clobber => []
 
