@@ -44,6 +44,8 @@ project_task "test_runner" do
   main        "test/helper.bas"
   source      "test/test_*.bas"
 
+  source      "src/configuration_file.bas"
+
   library     "mini_service"
 
   option defaults
@@ -70,7 +72,9 @@ end
 
 task :build => ["lib:mini_service"]
 task :run => ["test_runner:build"] do
-  sh "test/runner.exe"
+  chdir "test" do
+    sh "runner.exe"
+  end
 end
 
 task :rebuild => []
