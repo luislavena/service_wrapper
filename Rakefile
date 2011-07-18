@@ -17,9 +17,10 @@ project_task "service_wrapper" do
   build_to    "bin"
 
   search_path "inc"
+  search_path "vendor/mini_service/inc"
 
   # FIXME: hook mini_servie
-  #lib_path    "lib/win32"
+  lib_path    "vendor/mini_service/lib/win32"
 
   main        "src/service_wrapper.bas"
 
@@ -29,8 +30,27 @@ project_task "service_wrapper" do
   option defaults
 end
 
+namespace "lib" do
+  mini_service_dir  = "vendor/mini_service"
+  mini_service_rake = File.join(mini_service_dir, "Rakefile")
+  mini_service_lib  = File.join(mini_service_dir, "lib", "win32", "libmini_service.a")
+
+  desc "Build mini_service library (dependency)"
+  task "mini_service" => [mini_service_lib]
+
+  file mini_service_lib => [mini_service_rake] do
+    chdir mini_service_dir do
+      ruby "-S rake lib:build"
+    end
+  end
+
+  file mini_service_rake do
+    sh "git submodule update --init mini_service"
+  end
+end
+
 # TODO: hook mini_service as submodule
-task :build => []
+task :build => ["lib:mini_service"]
 task :rebuild => []
 task :clobber => []
 

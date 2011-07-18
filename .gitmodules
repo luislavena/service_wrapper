@@ -1,0 +1,3 @@
+[submodule "vendor/mini_service"]
+	path = vendor/mini_service
+	url = git://github.com/luislavena/mini_service.git
