@@ -16,15 +16,17 @@ project_task "service_wrapper" do
   executable  "service_wrapper"
   build_to    "bin"
 
+  if defaults[:trace]
+    define "_TRACE_FILE"
+  end
+
   search_path "inc"
   search_path "vendor/mini_service/inc"
 
-  # FIXME: hook mini_servie
   lib_path    "vendor/mini_service/lib/win32"
 
   main        "src/service_wrapper.bas"
 
-  # FIXME: hook mini_service
   library     "mini_service"
 
   option defaults
@@ -49,7 +51,6 @@ namespace "lib" do
   end
 end
 
-# TODO: hook mini_service as submodule
 task :build => ["lib:mini_service"]
 task :rebuild => []
 task :clobber => []
@@ -59,7 +60,11 @@ task :default => [:build]
 # FIXME: Source code package
 Rake::PackageTask.new(PRODUCT_NAME, PRODUCT_VERSION) do |pkg|
   pkg.need_zip = true
-  pkg.package_files = FileList[]
+  pkg.package_files = FileList[
+    "examples/*.conf", "inc/*.bi", "src/*.bas",
+    "README.md", "LICENSE.txt", "History.txt",
+    "rakehelp/freebasic.rb", "Rakefile"
+  ]
 end
 
 # FIXME: Fix binary package
