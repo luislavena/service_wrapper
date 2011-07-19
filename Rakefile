@@ -35,7 +35,7 @@ end
 namespace "test" do
   project_task "mock_process" do
     executable "mock_process"
-    build_to   "test/fixtures"
+    build_to   "test"
 
     main       "test/fixtures/mock_process.bas"
   end
