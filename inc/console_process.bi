@@ -9,6 +9,9 @@ type ConsoleProcess
     declare property executable as string
     declare property arguments as string
 
+    '# methods
+    declare function start() as integer
+
 private:
     '# hold property values
     _executable as string

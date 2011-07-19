@@ -32,24 +32,39 @@ project_task "service_wrapper" do
   option defaults
 end
 
-project_task "test_runner" do
-  executable  "runner"
-  build_to    "test"
+namespace "test" do
+  project_task "mock_process" do
+    executable "mock_process"
+    build_to   "test/fixtures"
 
-  search_path "inc"
-  search_path "vendor/mini_service/inc"
+    main       "test/fixtures/mock_process.bas"
+  end
 
-  lib_path    "vendor/mini_service/lib/win32"
+  project_task "test_runner" do
+    executable  "runner"
+    build_to    "test"
 
-  main        "test/helper.bas"
-  source      "test/test_*.bas"
+    search_path "inc"
+    search_path "vendor/mini_service/inc"
 
-  source      "src/configuration_file.bas"
-  source      "src/console_process.bas"
+    lib_path    "vendor/mini_service/lib/win32"
 
-  library     "mini_service"
+    main        "test/helper.bas"
+    source      "test/test_*.bas"
 
-  option defaults
+    source      "src/configuration_file.bas"
+    source      "src/console_process.bas"
+
+    library     "mini_service"
+
+    option defaults
+  end
+
+  task :run => ["test_runner:build", "mock_process:build"] do
+    chdir "test" do
+      sh "runner.exe"
+    end
+  end
 end
 
 namespace "lib" do
@@ -71,15 +86,10 @@ namespace "lib" do
   end
 end
 
-task :build => ["lib:mini_service"]
-task :run => ["test_runner:build"] do
-  chdir "test" do
-    sh "runner.exe"
-  end
-end
-
-task :rebuild => []
-task :clobber => []
+task :build => ["lib:mini_service", "test:build"]
+task :run => ["test:run"]
+task :rebuild => ["test:rebuild"]
+task :clobber => ["test:clobber"]
 
 task :default => [:build]
 

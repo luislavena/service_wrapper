@@ -16,3 +16,7 @@ end property
 property ConsoleProcess.arguments() as string
     return _arguments
 end property
+
+function ConsoleProcess.start() as integer
+    return 0
+end function
