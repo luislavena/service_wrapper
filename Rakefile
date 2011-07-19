@@ -45,6 +45,7 @@ project_task "test_runner" do
   source      "test/test_*.bas"
 
   source      "src/configuration_file.bas"
+  source      "src/console_process.bas"
 
   library     "mini_service"
 
