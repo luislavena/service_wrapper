@@ -120,3 +120,14 @@ function ConsoleProcess.exit_code() as integer
 
     return result
 end function
+
+function ConsoleProcess.running() as integer
+    dim result as integer
+
+    '# do we have a process to work with?
+    if (_pid) then
+        result = (exit_code = STILL_ACTIVE)
+    end if
+
+    return result
+end function

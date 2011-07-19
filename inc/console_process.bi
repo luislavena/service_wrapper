@@ -15,6 +15,7 @@ type ConsoleProcess
     '# methods
     declare function start() as integer
     declare function exit_code() as integer
+    declare function running() as integer
 
 private:
     '# hold property values

@@ -86,6 +86,35 @@ namespace TestConsoleProcess
         delete child
     end sub
 
+    sub test_running_not_started()
+        var child = new ConsoleProcess("mock_process.exe")
+        assert(child->running() = 0)
+        delete child
+    end sub
+
+    sub test_running_quick()
+        var child = new ConsoleProcess("mock_process.exe")
+        child->start()
+        assert(child->running())
+        delete child
+    end sub
+
+    sub test_running_ended()
+        var child = new ConsoleProcess("mock_process.exe")
+        child->start()
+        sleep 500
+        assert(child->running() = 0)
+        delete child
+    end sub
+
+    sub test_running_ended_with_error()
+        var child = new ConsoleProcess("mock_process.exe", "error")
+        child->start()
+        sleep 500
+        assert(child->running() = 0)
+        delete child
+    end sub
+
     sub run()
         test_require_executable
         test_optional_arguments
@@ -99,6 +128,10 @@ namespace TestConsoleProcess
         test_exit_code_still_active
         test_exit_code_worked_with_error
         test_exist_code_twice
+        test_running_not_started
+        test_running_quick
+        test_running_ended
+        test_running_ended_with_error
     end sub
 end namespace
 
