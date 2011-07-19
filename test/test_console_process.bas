@@ -26,15 +26,22 @@ namespace TestConsoleProcess
         delete child
     end sub
 
-    sub test_start_failed_pid()
+    sub test_pid_invalid()
         var child = new ConsoleProcess("invalid.exe")
         child->start()
         assert(child->pid = 0)
         delete child
     end sub
 
-    sub test_start_succeed_pid()
+    sub test_pid_worked()
         var child = new ConsoleProcess("mock_process.exe")
+        child->start()
+        assert(child->pid)
+        delete child
+    end sub
+
+    sub test_pid_worked_with_error()
+        var child = new ConsoleProcess("mock_process.exe", "error")
         child->start()
         assert(child->pid)
         delete child
@@ -45,8 +52,9 @@ namespace TestConsoleProcess
         test_optional_arguments
         test_start_failed
         test_start_succeed
-        test_start_failed_pid
-        test_start_succeed_pid
+        test_pid_invalid
+        test_pid_worked
+        test_pid_worked_with_error
     end sub
 end namespace
 
