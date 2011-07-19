@@ -57,7 +57,7 @@ namespace TestConsoleProcess
     sub test_exit_code_worked()
         var child = new ConsoleProcess("mock_process.exe")
         child->start()
-        sleep 500
+        sleep 250
         assert(child->exit_code() = 0)
         delete child
     end sub
@@ -72,7 +72,7 @@ namespace TestConsoleProcess
     sub test_exit_code_worked_with_error()
         var child = new ConsoleProcess("mock_process.exe", "error")
         child->start()
-        sleep 500
+        sleep 250
         assert(child->exit_code() = 1)
         delete child
     end sub
@@ -81,7 +81,7 @@ namespace TestConsoleProcess
         var child = new ConsoleProcess("mock_process.exe", "error")
         child->start()
         assert(child->exit_code() = STILL_ACTIVE)
-        sleep 500
+        sleep 250
         assert(child->exit_code() = 1)
         delete child
     end sub
@@ -102,7 +102,7 @@ namespace TestConsoleProcess
     sub test_running_ended()
         var child = new ConsoleProcess("mock_process.exe")
         child->start()
-        sleep 500
+        sleep 250
         assert(child->running() = 0)
         delete child
     end sub
@@ -110,7 +110,7 @@ namespace TestConsoleProcess
     sub test_running_ended_with_error()
         var child = new ConsoleProcess("mock_process.exe", "error")
         child->start()
-        sleep 500
+        sleep 250
         assert(child->running() = 0)
         delete child
     end sub
