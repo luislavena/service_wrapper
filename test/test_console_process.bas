@@ -47,6 +47,45 @@ namespace TestConsoleProcess
         delete child
     end sub
 
+    sub test_exit_code_invalid()
+        var child = new ConsoleProcess("invalid.exe")
+        child->start()
+        assert(child->exit_code() = 0)
+        delete child
+    end sub
+
+    sub test_exit_code_worked()
+        var child = new ConsoleProcess("mock_process.exe")
+        child->start()
+        sleep 500
+        assert(child->exit_code() = 0)
+        delete child
+    end sub
+
+    sub test_exit_code_still_active()
+        var child = new ConsoleProcess("mock_process.exe", "delay")
+        child->start()
+        assert(child->exit_code() = STILL_ACTIVE)
+        delete child
+    end sub
+
+    sub test_exit_code_worked_with_error()
+        var child = new ConsoleProcess("mock_process.exe", "error")
+        child->start()
+        sleep 500
+        assert(child->exit_code() = 1)
+        delete child
+    end sub
+
+    sub test_exist_code_twice()
+        var child = new ConsoleProcess("mock_process.exe", "error")
+        child->start()
+        assert(child->exit_code() = STILL_ACTIVE)
+        sleep 500
+        assert(child->exit_code() = 1)
+        delete child
+    end sub
+
     sub run()
         test_require_executable
         test_optional_arguments
@@ -55,6 +94,11 @@ namespace TestConsoleProcess
         test_pid_invalid
         test_pid_worked
         test_pid_worked_with_error
+        test_exit_code_invalid
+        test_exit_code_worked
+        test_exit_code_still_active
+        test_exit_code_worked_with_error
+        test_exist_code_twice
     end sub
 end namespace
 

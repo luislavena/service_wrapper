@@ -8,6 +8,10 @@ constructor ConsoleProcess(byref exe as string, byref args as string = "")
 end constructor
 
 destructor ConsoleProcess()
+    '# avoid HANDLE leakage
+    if (_process_info.hProcess) then
+        CloseHandle(_process_info.hProcess)
+    end if
 end destructor
 
 property ConsoleProcess.executable() as string
@@ -28,9 +32,9 @@ function ConsoleProcess.start() as integer
     dim success as integer = 0
 
     '# Process Information and context
+    dim cmdline as string
     dim context as STARTUPINFO
     dim proc_sa as SECURITY_ATTRIBUTES = type(sizeof(SECURITY_ATTRIBUTES), NULL, TRUE)
-    dim process_info as PROCESS_INFORMATION
 
     '# Std* pipes redirection
     dim as HANDLE StdInRd, StdOutRd, StdErrRd
@@ -65,9 +69,12 @@ function ConsoleProcess.start() as integer
             .dwFlags    = STARTF_USESTDHANDLES
         end with
 
+        '# build command line (for LpCommandLine)
+        cmdline = _executable + " " + _arguments
+
         success = CreateProcess( _
-            _executable, _          '# LPCTSTR lpApplicationName
-            _arguments, _           '# LPTSTR lpCommandLine
+            NULL, _                 '# LPCTSTR lpApplicationName
+            cmdline, _              '# LPTSTR lpCommandLine
             NULL, _                 '# LPSECURITY_ATTRIBUTES lpProcessAttributes
             NULL, _                 '# LPSECURITY_ATTRIBUTES lpThreadAttributes
             TRUE, _                 '# BOOL bInheritHandles
@@ -75,10 +82,14 @@ function ConsoleProcess.start() as integer
             NULL, _                 '# LPVOID lpEnvironment
             NULL, _                 '# LPCTSTR lpCurrentDirectory
             @context, _             '# LPSTARTUPINFO lpStartupInfo
-            @process_info _         '# LPPROCESS_INFORMATION lpProcessInformation
+            @_process_info _        '# LPPROCESS_INFORMATION lpProcessInformation
         )
         if (success) then
-            _pid = process_info.dwProcessId
+            '# clean unused handle
+            CloseHandle(_process_info.hThread)
+            _process_info.hThread = NULL
+
+            _pid = _process_info.dwProcessId
             result = success
         else
         end if
@@ -91,6 +102,21 @@ function ConsoleProcess.start() as integer
     CloseHandle(StdOutWr)
     CloseHandle(StdErrRd)
     CloseHandle(StdErrWr)
+
+    return result
+end function
+
+function ConsoleProcess.exit_code() as integer
+    dim result as integer
+    dim success as integer
+
+    '# do we have a pid to work with?
+    if (_pid) then
+        '# now we need a process reference
+        if (_process_info.hProcess) then
+            success = GetExitCodeProcess(_process_info.hProcess, @result)
+        end if
+    end if
 
     return result
 end function

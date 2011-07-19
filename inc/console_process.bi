@@ -14,12 +14,14 @@ type ConsoleProcess
 
     '# methods
     declare function start() as integer
+    declare function exit_code() as integer
 
 private:
     '# hold property values
     _executable as string
     _arguments as string
     _pid as integer
+    _process_info as PROCESS_INFORMATION
 end type
 
 #endif

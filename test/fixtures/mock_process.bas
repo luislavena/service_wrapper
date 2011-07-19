@@ -67,6 +67,10 @@ function main() as integer
             sleep
             return 0
 
+        case "delay":
+            sleep 500
+            return 0
+
         case "error":
             '# terminate with error code
             return 1
