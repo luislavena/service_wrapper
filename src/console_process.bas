@@ -110,24 +110,14 @@ function ConsoleProcess.exit_code() as integer
     dim result as integer
     dim success as integer
 
-    '# do we have a pid to work with?
-    if (_pid) then
-        '# now we need a process reference
-        if (_process_info.hProcess) then
-            success = GetExitCodeProcess(_process_info.hProcess, @result)
-        end if
+    '# do we have a process to work with?
+    if (_process_info.hProcess) then
+        success = GetExitCodeProcess(_process_info.hProcess, @result)
     end if
 
     return result
 end function
 
 function ConsoleProcess.running() as integer
-    dim result as integer
-
-    '# do we have a process to work with?
-    if (_pid) then
-        result = (exit_code = STILL_ACTIVE)
-    end if
-
-    return result
+    return (exit_code = STILL_ACTIVE)
 end function
