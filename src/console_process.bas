@@ -113,9 +113,9 @@ function ConsoleProcess.start() as integer
     return result
 end function
 
-function ConsoleProcess.exit_code() as integer
-    static previous_code as integer
-    dim result as integer
+function ConsoleProcess.exit_code() as uinteger
+    static previous_code as uinteger
+    dim result as uinteger
     dim success as integer
 
     '# do we have a process to work with?
