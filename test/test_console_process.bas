@@ -156,6 +156,26 @@ namespace TestConsoleProcess
         cleanup
     end sub
 
+    sub test_terminate_induced_ctrl_c()
+        var child = new ConsoleProcess("mock_process.exe", "slow1")
+        child->start()
+        sleep 250
+        assert(child->terminate())
+        assert(child->exit_code() = 10)
+        delete child
+        cleanup
+    end sub
+
+    sub test_terminate_forced_ctrl_break()
+        var child = new ConsoleProcess("mock_process.exe", "slow2")
+        child->start()
+        sleep 250
+        assert(child->terminate())
+        assert(child->exit_code() = 20)
+        delete child
+        cleanup
+    end sub
+
     sub run()
         test_require_executable
         test_quoted_executable
@@ -178,6 +198,8 @@ namespace TestConsoleProcess
         test_terminate_invalid
         test_terminate_ended
         test_terminate_waiting
+        test_terminate_induced_ctrl_c
+        test_terminate_forced_ctrl_break
     end sub
 end namespace
 

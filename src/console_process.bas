@@ -155,8 +155,15 @@ function ConsoleProcess.terminate() as integer
             success = GenerateConsoleCtrlEvent(CTRL_C_EVENT, 0)
             if (success) then
                 wait_code = WaitForSingleObject(_process_info.hProcess, timeout)
-                if not (wait_code = WAIT_TIMEOUT) then
-                    result = true
+                result = not (wait_code = WAIT_TIMEOUT)
+            end if
+
+            '# didn't work? send Ctrl+Break and wait
+            if not (result) then
+                success = GenerateConsoleCtrlEvent(CTRL_BREAK_EVENT, 0)
+                if (success) then
+                    wait_code = WaitForSingleObject(_process_info.hProcess, timeout)
+                    result = not (wait_code = WAIT_TIMEOUT)
                 end if
             end if
         end if
