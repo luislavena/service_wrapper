@@ -2,7 +2,14 @@
 
 constructor ConsoleProcess(byref exe as string, byref args as string = "")
     '# store executable name for future references
-    _executable = exe
+
+    '# executable with spaces?
+    if (instr(exe, " ")) then
+        _executable = !"\"" + exe + !"\""
+    else
+        _executable = exe
+    end if
+
     _arguments = args
     _pid = 0
 end constructor

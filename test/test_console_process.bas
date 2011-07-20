@@ -8,6 +8,12 @@ namespace TestConsoleProcess
         delete child
     end sub
 
+    sub test_quoted_executable()
+        var child = new ConsoleProcess("executable with spaces.exe")
+        assert(instr(child->executable, !"\""))
+        delete child
+    end sub
+
     sub test_optional_arguments()
         var child = new ConsoleProcess("prog.exe", "arg1 arg2")
         assert(child->arguments = "arg1 arg2")
@@ -117,6 +123,7 @@ namespace TestConsoleProcess
 
     sub run()
         test_require_executable
+        test_quoted_executable
         test_optional_arguments
         test_start_failed
         test_start_succeed
