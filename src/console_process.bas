@@ -114,12 +114,24 @@ function ConsoleProcess.start() as integer
 end function
 
 function ConsoleProcess.exit_code() as integer
+    static previous_code as integer
     dim result as integer
     dim success as integer
 
     '# do we have a process to work with?
     if (_process_info.hProcess) then
         success = GetExitCodeProcess(_process_info.hProcess, @result)
+        if (success) then
+            previous_code = result
+
+            '# free handle if not required
+            if not (result = STILL_ACTIVE) then
+                CloseHandle(_process_info.hProcess)
+                _process_info.hProcess = NULL
+            end if
+        end if
+    else
+        result = previous_code
     end if
 
     return result
