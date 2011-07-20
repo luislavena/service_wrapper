@@ -16,8 +16,12 @@ type ConsoleProcess
     declare function start() as integer
     declare function exit_code() as uinteger
     declare function running() as integer
+    declare function terminate() as integer
 
 private:
+    '# used by SetConsoleCtrlHandler
+    declare static function handler_routine(byval as DWORD) as BOOL
+
     '# hold property values
     _executable as string
     _arguments as string

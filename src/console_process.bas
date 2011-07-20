@@ -140,3 +140,44 @@ end function
 function ConsoleProcess.running() as integer
     return (exit_code = STILL_ACTIVE)
 end function
+
+function ConsoleProcess.terminate() as integer
+    dim result as integer
+    dim success as integer
+    dim wait_code as integer
+    dim timeout as integer = 10000
+
+    if (running) then
+        '# hook our handler routine
+        success = SetConsoleCtrlHandler(@handler_routine, TRUE)
+        if (success) then
+            '# send CTRL_C_EVENT and wait for result
+            success = GenerateConsoleCtrlEvent(CTRL_C_EVENT, 0)
+            if (success) then
+                wait_code = WaitForSingleObject(_process_info.hProcess, timeout)
+                if not (wait_code = WAIT_TIMEOUT) then
+                    result = true
+                end if
+            end if
+        end if
+
+        '# remove to restore functionality
+        success = SetConsoleCtrlHandler(@handler_routine, FALSE)
+    end if
+
+    return result
+end function
+
+function ConsoleProcess.handler_routine(byval dwCtrlType as DWORD) as BOOL
+    dim result as BOOL
+
+    '# shall we process dwCtrlType?
+    select case dwCtrlType
+    case CTRL_C_EVENT, CTRL_BREAK_EVENT:
+        result = TRUE
+    case else:
+        result = FALSE
+    end select
+
+    return result
+end function
