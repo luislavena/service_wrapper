@@ -141,11 +141,11 @@ function ConsoleProcess.running() as integer
     return (exit_code = STILL_ACTIVE)
 end function
 
-function ConsoleProcess.terminate() as integer
+function ConsoleProcess.terminate(byval default_timeout as integer = 5) as integer
     dim result as integer
     dim success as integer
     dim wait_code as integer
-    dim timeout as integer = 10000
+    dim timeout as integer = default_timeout * 1000 '# milliseconds
 
     if (running) then
         '# hook our handler routine

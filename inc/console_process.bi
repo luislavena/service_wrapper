@@ -16,7 +16,7 @@ type ConsoleProcess
     declare function start() as integer
     declare function exit_code() as uinteger
     declare function running() as integer
-    declare function terminate() as integer
+    declare function terminate(byval as integer = 5) as integer
 
 private:
     '# used by SetConsoleCtrlHandler

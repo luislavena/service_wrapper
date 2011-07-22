@@ -176,6 +176,36 @@ namespace TestConsoleProcess
         cleanup
     end sub
 
+    sub test_terminate_with_default_timeout()
+        dim as double a, b
+        dim diff as integer
+        var child = new ConsoleProcess("mock_process.exe", "slow2")
+        child->start()
+        sleep 250
+        a = timer()
+        child->terminate()
+        b = timer()
+        diff = int(b - a)
+        assert(diff = 5)
+        delete child
+        cleanup
+    end sub
+
+    sub test_terminate_with_customized_timeout()
+        dim as double a, b
+        dim diff as integer
+        var child = new ConsoleProcess("mock_process.exe", "slow2")
+        child->start()
+        sleep 250
+        a = timer()
+        child->terminate(8)
+        b = timer()
+        diff = int(b - a)
+        assert(diff = 8)
+        delete child
+        cleanup
+    end sub
+
     sub run()
         test_require_executable
         test_quoted_executable
@@ -200,6 +230,8 @@ namespace TestConsoleProcess
         test_terminate_waiting
         test_terminate_induced_ctrl_c
         test_terminate_forced_ctrl_break
+        test_terminate_with_default_timeout
+        test_terminate_with_customized_timeout
     end sub
 end namespace
 
