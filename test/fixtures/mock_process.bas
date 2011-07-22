@@ -82,6 +82,10 @@ function main() as integer
         case "slow2":
             wait_for(2)
             return 20
+
+        case "zombie":
+            wait_for(3)
+            return 30
     end select
 end function
 

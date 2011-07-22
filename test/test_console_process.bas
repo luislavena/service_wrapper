@@ -206,6 +206,33 @@ namespace TestConsoleProcess
         cleanup
     end sub
 
+    sub test_terminate_zombie_fail()
+        var child = new ConsoleProcess("mock_process.exe", "zombie")
+        child->start()
+        sleep 250
+        assert(child->terminate(1) = 0)
+        assert(child->running())
+        delete child
+        cleanup
+    end sub
+
+    sub test_kill_not_started()
+        var child = new ConsoleProcess("invalid.exe")
+        assert(child->kill() = 0)
+        delete child
+    end sub
+
+    sub test_kill_zombie()
+        var child = new ConsoleProcess("mock_process.exe", "zombie")
+        child->start()
+        sleep 250
+        assert(child->kill())
+        sleep 250
+        assert(child->running() = 0)
+        delete child
+        cleanup
+    end sub
+
     sub run()
         test_require_executable
         test_quoted_executable
@@ -232,6 +259,9 @@ namespace TestConsoleProcess
         test_terminate_forced_ctrl_break
         test_terminate_with_default_timeout
         test_terminate_with_customized_timeout
+        test_terminate_zombie_fail
+        test_kill_not_started
+        test_kill_zombie
     end sub
 end namespace
 

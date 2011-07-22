@@ -175,6 +175,16 @@ function ConsoleProcess.terminate(byval default_timeout as integer = 5) as integ
     return result
 end function
 
+function ConsoleProcess.kill() as integer
+    dim result as integer
+
+    if (running) then
+        result = TerminateProcess(_process_info.hProcess, 0)
+    end if
+
+    return result
+end function
+
 function ConsoleProcess.handler_routine(byval dwCtrlType as DWORD) as BOOL
     dim result as BOOL
 
