@@ -234,6 +234,7 @@ namespace TestConsoleProcess
     end sub
 
     sub run()
+        print "TestConsoleProcess: ";
         test_require_executable
         test_quoted_executable
         test_optional_arguments
@@ -262,6 +263,7 @@ namespace TestConsoleProcess
         test_terminate_zombie_fail
         test_kill_not_started
         test_kill_zombie
+        print "DONE"
     end sub
 end namespace
 

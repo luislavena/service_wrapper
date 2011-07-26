@@ -22,9 +22,11 @@ namespace TestConfigurationFile
     end sub
 
     sub run()
+        print "TestConfigurationFile: ";
         test_read_executable
         test_read_arguments
         test_ignore_garbage_section
+        print "DONE"
     end sub
 end namespace
 
