@@ -10,6 +10,7 @@ type ConfigurationFile
     '# properties (read-only)
     declare property executable as string
     declare property arguments as string
+    declare property directory as string
 
 private:
     _filename as string

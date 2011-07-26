@@ -14,6 +14,12 @@ namespace TestConfigurationFile
         delete conf
     end sub
 
+    sub test_read_directory
+        var conf = new ConfigurationFile("fixtures/simple.conf")
+        assert(conf->directory = $"C:\MyApp")
+        delete conf
+    end sub
+
     sub test_ignore_garbage_section
         var conf = new ConfigurationFile("fixtures/garbage.conf")
         assert(conf->executable = "valid.exe")
@@ -25,6 +31,7 @@ namespace TestConfigurationFile
         print "TestConfigurationFile: ";
         test_read_executable
         test_read_arguments
+        test_read_directory
         test_ignore_garbage_section
         print "DONE"
     end sub

@@ -16,6 +16,10 @@ property ConfigurationFile.arguments() as string
     return retrieve("arguments")
 end property
 
+property ConfigurationFile.directory() as string
+    return retrieve("directory")
+end property
+
 function ConfigurationFile.retrieve(byref key as string) as string
     dim buffer as zstring * 2048
     dim request as DWORD
