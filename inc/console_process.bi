@@ -18,6 +18,8 @@ type ConsoleProcess
     declare function running() as integer
     declare function terminate(byval as integer = 5) as integer
     declare function kill() as integer
+    declare function redirect(byref as string) as integer
+    declare function redirected() as integer
 
 private:
     '# used by SetConsoleCtrlHandler
@@ -28,6 +30,7 @@ private:
     _arguments as string
     _pid as integer
     _process_info as PROCESS_INFORMATION
+    _redirect_filename as string
 end type
 
 #endif

@@ -233,6 +233,25 @@ namespace TestConsoleProcess
         cleanup
     end sub
 
+    sub test_not_redirected()
+        var child = new ConsoleProcess("mock_process.exe")
+        assert(child->redirected() = 0)
+        delete child
+    end sub
+
+    sub test_redirect_invalid()
+        var child = new ConsoleProcess("mock_process.exe")
+        assert(child->redirect("") = 0)
+        delete child
+    end sub
+
+    sub test_redirect()
+        var child = new ConsoleProcess("mock_process.exe")
+        assert(child->redirect("output.log"))
+        assert(child->redirected())
+        delete child
+    end sub
+
     sub run()
         print "TestConsoleProcess: ";
         test_require_executable
@@ -263,6 +282,9 @@ namespace TestConsoleProcess
         test_terminate_zombie_fail
         test_kill_not_started
         test_kill_zombie
+        test_not_redirected
+        test_redirect_invalid
+        test_redirect
         print "DONE"
     end sub
 end namespace

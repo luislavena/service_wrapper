@@ -185,6 +185,23 @@ function ConsoleProcess.kill() as integer
     return result
 end function
 
+function ConsoleProcess.redirect(byref redirect_filename as string) as integer
+    dim result as integer = 0
+
+    if not (running) then
+        if (len(redirect_filename) > 0) then
+            _redirect_filename = redirect_filename
+            result = not result
+        end if
+    end if
+
+    return result
+end function
+
+function ConsoleProcess.redirected() as integer
+    return (len(_redirect_filename) > 0)
+end function
+
 function ConsoleProcess.handler_routine(byval dwCtrlType as DWORD) as BOOL
     dim result as BOOL
 
