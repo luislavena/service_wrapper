@@ -53,20 +53,48 @@ function ConsoleProcess.start() as integer
         success = SetHandleInformation(StdInWr, HANDLE_FLAG_INHERIT, 0)
     end if
 
-    '# create pipes for StdOut and ensure is not inherited (Read)
-    success = CreatePipe(@StdOutRd, @StdOutWr, @proc_sa, 0)
-    if (success) then
-        success = SetHandleInformation(StdOutRd, HANDLE_FLAG_INHERIT, 0)
+    if (redirected) then
+        '# open _redirect_filename for append and use for StdOutWr
+        StdOutWr = CreateFile( _
+            _redirect_filename, _                   '# LPCTSTR lpFileName
+            GENERIC_WRITE, _                        '# DWORD dwDesiredAccess
+            (FILE_SHARE_READ or FILE_SHARE_WRITE), _ '# DWORD dwShareMode
+            @proc_sa, _                             '# LPSECURITY_ATTRIBUTES lpSecurityAttributes
+            OPEN_ALWAYS, _                          '# DWORD dwCreationDisposition
+            FILE_ATTRIBUTE_NORMAL, _                '# DWORD dwFlagsAndAttributes
+            NULL _                                  '# HANDLE hTemplateFile
+        )
+
+        '# fail to open the file?
+        if (StdOutWr = INVALID_HANDLE_VALUE) then
+            success = not success
+        else
+            '# StdErr == StdOut
+            StdErrWr = StdOutWr
+            '# worked, move file pointer to end of the file
+            SetFilePointer(StdOutWr, 0, NULL, FILE_END)
+        end if
+    else
+        '# create pipes for StdOut and ensure is not inherited (Read)
+        success = CreatePipe(@StdOutRd, @StdOutWr, @proc_sa, 0)
+        if (success) then
+            success = SetHandleInformation(StdOutRd, HANDLE_FLAG_INHERIT, 0)
+        end if
+
+        '# create pipes for StdErr and ensure is not inherited (Read)
+        success = CreatePipe(@StdErrRd, @StdOutWr, @proc_sa, 0)
+        if (success) then
+            success = SetHandleInformation(StdErrRd, HANDLE_FLAG_INHERIT, 0)
+        end if
     end if
 
-    '# create pipes for StdErr and ensure is not inherited (Read)
-    success = CreatePipe(@StdErrRd, @StdOutWr, @proc_sa, 0)
+    '# assume we have the pipes or file handle
     if (success) then
-        success = SetHandleInformation(StdErrRd, HANDLE_FLAG_INHERIT, 0)
-    end if
 
-    '# assume we have the pipes
-    if (success) then
+        '# Allocate a console, services don't have one
+        '# (we don't care about the result of it)
+        AllocConsole
+
         '# set Std* for context
         with context
             .cb         = sizeof(context)

@@ -4,7 +4,21 @@
 namespace TestConsoleProcess
     sub cleanup()
         shell("taskkill.exe /F /IM mock_process.exe 1>NUL 2>&1")
+        kill("output.log")
     end sub
+
+    function file_read(byref filename as string) as string
+        dim result as string
+        dim handle as integer
+
+        handle = freefile
+        open "output.log" for binary as #handle
+        result = space(lof(handle))
+        get #handle, , result
+        close #handle
+
+        return result
+    end function
 
     sub test_require_executable()
         var child = new ConsoleProcess("prog.exe")
@@ -252,6 +266,50 @@ namespace TestConsoleProcess
         delete child
     end sub
 
+    sub test_redirected_file()
+        dim filename as string
+        var child = new ConsoleProcess("mock_process.exe")
+        child->redirect("output.log")
+        child->start()
+        sleep 250
+        filename = Dir("output.log")
+        assert(len(filename) > 0)
+        delete child
+    end sub
+
+    sub test_redirected_file_contents()
+        dim contents as string
+
+        var child = new ConsoleProcess("mock_process.exe")
+        child->redirect("output.log")
+        child->start()
+        sleep 250
+        contents = file_read("output.log")
+
+        assert(instr(contents, "out: message"))
+        assert(instr(contents, "err: error"))
+
+        delete child
+        cleanup
+    end sub
+
+    sub test_redirected_file_append()
+        dim as string contents1, contents2
+        var child = new ConsoleProcess("mock_process.exe")
+        child->redirect("output.log")
+        child->start()
+        sleep 250
+        '# read contents first time
+        contents1 = file_read("output.log")
+        '# start and read contents again
+        child->start()
+        sleep 250
+        contents2 = file_read("output.log")
+        assert(len(contents2) > len(contents1))
+        delete child
+        cleanup
+    end sub
+
     sub run()
         print "TestConsoleProcess: ";
         test_require_executable
@@ -285,6 +343,9 @@ namespace TestConsoleProcess
         test_not_redirected
         test_redirect_invalid
         test_redirect
+        test_redirected_file
+        test_redirected_file_contents
+        test_redirected_file_append
         print "DONE"
     end sub
 end namespace
