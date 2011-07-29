@@ -11,6 +11,7 @@ type ConfigurationFile
     declare property executable as string
     declare property arguments as string
     declare property directory as string
+    declare property logfile as string
 
 private:
     _filename as string

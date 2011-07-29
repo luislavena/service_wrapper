@@ -20,6 +20,12 @@ namespace TestConfigurationFile
         delete conf
     end sub
 
+    sub test_read_logfile
+        var conf = new ConfigurationFile("fixtures/simple.conf")
+        assert(conf->logfile = "output.log")
+        delete conf
+    end sub
+
     sub test_ignore_garbage_section
         var conf = new ConfigurationFile("fixtures/garbage.conf")
         assert(conf->executable = "valid.exe")
@@ -32,6 +38,7 @@ namespace TestConfigurationFile
         test_read_executable
         test_read_arguments
         test_read_directory
+        test_read_logfile
         test_ignore_garbage_section
         print "DONE"
     end sub
