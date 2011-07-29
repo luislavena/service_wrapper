@@ -7,7 +7,7 @@ namespace TestConsoleProcess
         kill("output.log")
     end sub
 
-    function file_read(byref filename as string) as string
+    function read_file(byref filename as string) as string
         dim result as string
         dim handle as integer
 
@@ -284,7 +284,7 @@ namespace TestConsoleProcess
         child->redirect("output.log")
         child->start()
         sleep 250
-        contents = file_read("output.log")
+        contents = read_file("output.log")
 
         assert(instr(contents, "out: message"))
         assert(instr(contents, "err: error"))
@@ -300,12 +300,50 @@ namespace TestConsoleProcess
         child->start()
         sleep 250
         '# read contents first time
-        contents1 = file_read("output.log")
+        contents1 = read_file("output.log")
         '# start and read contents again
         child->start()
         sleep 250
-        contents2 = file_read("output.log")
+        contents2 = read_file("output.log")
         assert(len(contents2) > len(contents1))
+        delete child
+        cleanup
+    end sub
+
+    sub test_current_directory_not_set()
+        var child = new ConsoleProcess("mock_process.exe", "pwd")
+        assert(child->directory = "")
+        delete child
+    end sub
+
+    sub test_current_directory_not_set_executed()
+        dim contents as string
+        var child = new ConsoleProcess("mock_process.exe", "pwd")
+        child->redirect("output.log")
+        child->start()
+        sleep 250
+        contents = read_file("output.log")
+        assert(instr(contents, EXEPATH))
+        delete child
+        cleanup
+    end sub
+
+    sub test_current_directory_changed()
+        var child = new ConsoleProcess(EXEPATH + "\mock_process.exe", "pwd")
+        child->directory = EXEPATH + "\fixtures"
+        assert(child->directory = EXEPATH + "\fixtures")
+        delete child
+    end sub
+
+    sub test_current_directory_changed_executed()
+        dim contents as string
+        var child = new ConsoleProcess(EXEPATH + "\mock_process.exe", "pwd")
+        child->directory = EXEPATH + "\fixtures"
+        child->redirect("output.log")
+        child->start()
+        sleep 250
+        contents = read_file("output.log")
+        assert(instr(contents, EXEPATH + "\fixtures"))
         delete child
         cleanup
     end sub
@@ -346,6 +384,10 @@ namespace TestConsoleProcess
         test_redirected_file
         test_redirected_file_contents
         test_redirected_file_append
+        test_current_directory_not_set
+        test_current_directory_not_set_executed
+        test_current_directory_changed
+        test_current_directory_changed_executed
         print "DONE"
     end sub
 end namespace

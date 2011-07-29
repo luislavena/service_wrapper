@@ -86,6 +86,10 @@ function main() as integer
         case "zombie":
             wait_for(3)
             return 30
+
+        case "pwd":
+            fprintf(stdout, CurDir())
+            return 0
     end select
 end function
 

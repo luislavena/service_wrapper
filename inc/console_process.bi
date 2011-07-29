@@ -11,6 +11,8 @@ type ConsoleProcess
     declare property executable as string
     declare property arguments as string
     declare property pid as integer
+    declare property directory as string
+    declare property directory(byref as string)
 
     '# methods
     declare function start() as integer
@@ -31,6 +33,7 @@ private:
     _pid as integer
     _process_info as PROCESS_INFORMATION
     _redirect_filename as string
+    _directory as string
 end type
 
 #endif

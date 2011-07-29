@@ -33,6 +33,14 @@ property ConsoleProcess.pid() as integer
     return _pid
 end property
 
+property ConsoleProcess.directory() as string
+    return _directory
+end property
+
+property ConsoleProcess.directory(byref new_directory as string)
+    _directory = new_directory
+end property
+
 function ConsoleProcess.start() as integer
     '# assume nothing worked
     dim result as integer = 0
@@ -115,7 +123,7 @@ function ConsoleProcess.start() as integer
             TRUE, _                 '# BOOL bInheritHandles
             NORMAL_PRIORITY_CLASS, _'# DWORD dwCreationFlags
             NULL, _                 '# LPVOID lpEnvironment
-            NULL, _                 '# LPCTSTR lpCurrentDirectory
+            _directory, _           '# LPCTSTR lpCurrentDirectory
             @context, _             '# LPSTARTUPINFO lpStartupInfo
             @_process_info _        '# LPPROCESS_INFORMATION lpProcessInformation
         )
