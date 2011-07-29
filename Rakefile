@@ -25,7 +25,8 @@ project_task "service_wrapper" do
 
   lib_path    "vendor/mini_service/lib/win32"
 
-  main        "src/service_wrapper.bas"
+  main        "src/main.bas"
+  source      "src/*.bas"
 
   library     "mini_service"
 
