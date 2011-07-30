@@ -5,15 +5,23 @@ constructor ServiceWrapper()
     base = new MiniService("ServiceWrapper")
     base->onInit = @ServiceWrapper.onInit
     base->onStart = @ServiceWrapper.onStart
+    base->onStop = @ServiceWrapper.onStop
     base->extra = @this
 end constructor
 
 destructor ServiceWrapper()
-    trace("unset everything and delete base and config")
+    trace("unset everything and delete config, child and base")
     if (config) then
         delete config
     end if
+
+    if (child) then
+        delete child
+    end if
+
+    base->onInit = 0
     base->onStart = 0
+    base->onStop = 0
     base->extra = 0
     delete base
 end destructor
@@ -26,12 +34,40 @@ end sub
 sub ServiceWrapper.onInit(byval base as MiniService ptr)
     var this = cast(ServiceWrapper ptr, base->extra)
 
+    trace("System PATH: " + Environ("PATH"))
+
     trace("initialize config with file '" + base->command_line + "'")
     this->config = new ConfigurationFile(base->command_line)
+    var config = this->config '# shorthand
 
-    trace("executable: " + this->config->executable)
-    trace("arguments: " + this->config->arguments)
-    trace("directory: " + this->config->directory)
+    trace("executable: " + config->executable)
+    trace("arguments: " + config->arguments)
+    trace("directory: " + config->directory)
+    trace("logfile: " + config->logfile)
+
+    if not (config->executable = "") then
+        trace("prepare and start child process")
+        this->child = new ConsoleProcess( _
+            this->config->executable, _
+            this->config->arguments _
+        )
+        var child = this->child
+
+        if not (config->directory = "") then
+            trace("adjusting child process current directory")
+            child->directory = config->directory
+        end if
+
+        if not (config->logfile = "") then
+            trace("redirecting child process to logfile")
+            child->redirect(config->logfile)
+        end if
+
+        trace("start child process")
+        child->start()
+    end if
+
+    trace("done with onInit")
 end sub
 
 sub ServiceWrapper.onStart(byval base as MiniService ptr)
@@ -41,7 +77,33 @@ sub ServiceWrapper.onStart(byval base as MiniService ptr)
     do while (base->state = MiniService.States.Running)
         sleep 100
     loop
-    trace("done with running")
+
+    if (this->child) then
+        '# verify if child is still running
+        if (this->child->running) then
+            trace("killing child process")
+            this->child->kill()
+        else
+            trace("child process terminated with: " + str(this->child->exit_code))
+        end if
+    end if
+
+    trace("done with onStart")
+end sub
+
+sub ServiceWrapper.onStop(byval base as MiniService ptr)
+    var this = cast(ServiceWrapper ptr, base->extra)
+
+    if (this->child) then
+        '# FIXME: ping ServiceManager think we are dead...
+        trace("attempting to terminate child process")
+        this->child->terminate()
+        if not (this->child->running) then
+            trace("succeed, exit_code: " + str(this->child->exit_code))
+        end if
+    end if
+
+    trace("done with onStop")
 end sub
 
 #ifdef _TRACE_FILE

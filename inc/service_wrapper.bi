@@ -3,6 +3,7 @@
 
 #include once "mini_service.bi"
 #include once "configuration_file.bi"
+#include once "console_process.bi"
 
 #undef trace
 #ifdef _TRACE_FILE
@@ -20,6 +21,7 @@ type ServiceWrapper
 private:
     base as MiniService ptr
     config as ConfigurationFile ptr
+    child as ConsoleProcess ptr
 
     '# TODO: onInit and onStop
     declare static sub onInit(byval as MiniService ptr)
