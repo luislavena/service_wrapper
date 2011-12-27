@@ -330,64 +330,64 @@ namespace TestConsoleProcess
 
     sub test_current_directory_changed()
         var child = new ConsoleProcess(EXEPATH + "\mock_process.exe", "pwd")
-        child->directory = EXEPATH + "\fixtures"
-        assert(child->directory = EXEPATH + "\fixtures")
+        child->directory = EXEPATH + $"\fixtures"
+        assert(child->directory = EXEPATH + $"\fixtures")
         delete child
     end sub
 
     sub test_current_directory_changed_executed()
         dim contents as string
         var child = new ConsoleProcess(EXEPATH + "\mock_process.exe", "pwd")
-        child->directory = EXEPATH + "\fixtures"
+        child->directory = EXEPATH + $"\fixtures"
         child->redirect("output.log")
         child->start()
         sleep 250
         contents = read_file("output.log")
-        assert(instr(contents, EXEPATH + "\fixtures"))
+        assert(instr(contents, EXEPATH + $"\fixtures"))
         delete child
         cleanup
     end sub
 
     sub run()
         print "TestConsoleProcess: ";
-        test_require_executable
-        test_quoted_executable
-        test_optional_arguments
-        test_start_failed
-        test_start_succeed
-        test_pid_invalid
-        test_pid_worked
-        test_pid_worked_with_error
-        test_exit_code_invalid
-        test_exit_code_worked
-        test_exit_code_still_active
-        test_exit_code_worked_with_error
-        test_exist_code_twice
-        test_running_not_started
-        test_running_quick
-        test_running_ended
-        test_running_ended_with_error
-        test_terminate_not_started
-        test_terminate_invalid
-        test_terminate_ended
-        test_terminate_waiting
-        test_terminate_induced_ctrl_c
-        test_terminate_forced_ctrl_break
-        test_terminate_with_default_timeout
-        test_terminate_with_customized_timeout
-        test_terminate_zombie_fail
-        test_kill_not_started
-        test_kill_zombie
-        test_not_redirected
-        test_redirect_invalid
-        test_redirect
-        test_redirected_file
-        test_redirected_file_contents
-        test_redirected_file_append
-        test_current_directory_not_set
-        test_current_directory_not_set_executed
-        test_current_directory_changed
-        test_current_directory_changed_executed
+        progress(test_require_executable)
+        progress(test_quoted_executable)
+        progress(test_optional_arguments)
+        progress(test_start_failed)
+        progress(test_start_succeed)
+        progress(test_pid_invalid)
+        progress(test_pid_worked)
+        progress(test_pid_worked_with_error)
+        progress(test_exit_code_invalid)
+        progress(test_exit_code_worked)
+        progress(test_exit_code_still_active)
+        progress(test_exit_code_worked_with_error)
+        progress(test_exist_code_twice)
+        progress(test_running_not_started)
+        progress(test_running_quick)
+        progress(test_running_ended)
+        progress(test_running_ended_with_error)
+        progress(test_terminate_not_started)
+        progress(test_terminate_invalid)
+        progress(test_terminate_ended)
+        progress(test_terminate_waiting)
+        progress(test_terminate_induced_ctrl_c)
+        progress(test_terminate_forced_ctrl_break)
+        progress(test_terminate_with_default_timeout)
+        progress(test_terminate_with_customized_timeout)
+        progress(test_terminate_zombie_fail)
+        progress(test_kill_not_started)
+        progress(test_kill_zombie)
+        progress(test_not_redirected)
+        progress(test_redirect_invalid)
+        progress(test_redirect)
+        progress(test_redirected_file)
+        progress(test_redirected_file_contents)
+        progress(test_redirected_file_append)
+        progress(test_current_directory_not_set)
+        progress(test_current_directory_not_set_executed)
+        progress(test_current_directory_changed)
+        progress(test_current_directory_changed_executed)
         print "DONE"
     end sub
 end namespace

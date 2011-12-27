@@ -35,11 +35,11 @@ namespace TestConfigurationFile
 
     sub run()
         print "TestConfigurationFile: ";
-        test_read_executable
-        test_read_arguments
-        test_read_directory
-        test_read_logfile
-        test_ignore_garbage_section
+        progress(test_read_executable)
+        progress(test_read_arguments)
+        progress(test_read_directory)
+        progress(test_read_logfile)
+        progress(test_ignore_garbage_section)
         print "DONE"
     end sub
 end namespace
