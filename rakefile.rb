@@ -17,6 +17,7 @@ task :default => [:build]
 task :build   => ["lib:mini_service", "test:build", "service_wrapper:build"]
 task :run     => ["test:run"]
 task :rebuild => ["test:rebuild"]
+task :package => ["build"]
 task :clobber => ["test:clobber"]
 
 project_task "service_wrapper" do
