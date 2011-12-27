@@ -1,1 +1,4 @@
-=== (In Git)
+=== 0.1.0 / 2011-12-27
+
+* Enhancements
+  * Birthday!

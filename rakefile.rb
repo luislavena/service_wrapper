@@ -2,7 +2,7 @@ require File.expand_path("rakehelp/freebasic", File.dirname(__FILE__))
 require "rake/packagetask"
 
 PRODUCT_NAME = "service_wrapper"
-PRODUCT_VERSION = "0.0.1"
+PRODUCT_VERSION = "0.1.0"
 PRODUCT_RELEASE = "#{PRODUCT_NAME}-#{PRODUCT_VERSION}-win32.zip"
 
 defaults = {
