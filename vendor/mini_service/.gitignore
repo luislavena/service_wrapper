@@ -1,0 +1,7 @@
+*.itProject
+*.sublime-project
+*.o
+*.a
+*.exe
+*.log
+pkg

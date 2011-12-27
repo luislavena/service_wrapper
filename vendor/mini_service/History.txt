@@ -1,0 +1,10 @@
+=== 0.1.1 / Unreleased
+
+* Bugfixes:
+  * Add missing name and command_line properties
+  * Prevent trace_file mess with things outside the library itself
+
+=== 0.1.0 / 2011-07-16
+
+* Enhancements:
+  * Birthday!
