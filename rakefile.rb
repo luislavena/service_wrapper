@@ -94,9 +94,9 @@ end
 Rake::PackageTask.new(PRODUCT_NAME, PRODUCT_VERSION) do |pkg|
   pkg.need_zip = true
   pkg.package_files = FileList[
-    "examples/*.conf", "inc/*.bi", "src/*.bas",
+    "examples/**/*.{conf,rb,ru,md}", "inc/*.bi", "src/*.bas",
     "README.md", "LICENSE.txt", "History.txt",
-    "rakehelp/freebasic.rb", "Rakefile"
+    "rakehelp/freebasic.rb", "rakefile.rb"
   ]
 end
 
@@ -119,7 +119,13 @@ file "pkg/#{PRODUCT_RELEASE}" => ["pkg"] do |f|
   mkdir_p exa_dir
 
   cp FileList["bin/*.exe"], bin_dir
-  cp "examples/*.conf", exa_dir
+
+  Dir.glob("examples/**/*.{conf,rb,ru,md}").each do |f|
+    dir = File.join(exa_dir, File.dirname(f))
+    mkdir_p dir unless File.directory?(dir)
+    cp f, dir
+  end
+
   cp "README.md", doc_dir
   cp "History.txt", doc_dir
   cp "LICENSE.txt", doc_dir
