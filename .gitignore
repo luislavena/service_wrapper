@@ -1,5 +1,6 @@
 *.itProject
 *.sublime-project
+*.komodoproject
 *.o
 *.a
 *.exe
