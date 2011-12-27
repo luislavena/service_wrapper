@@ -12,6 +12,13 @@ defaults = {
   :debug    => ENV.fetch("DEBUG", false)   # optional debugging
 }
 
+task :default => [:build]
+
+task :build   => ["lib:mini_service", "test:build", "service_wrapper:build"]
+task :run     => ["test:run"]
+task :rebuild => ["test:rebuild"]
+task :clobber => ["test:clobber"]
+
 project_task "service_wrapper" do
   executable  "service_wrapper"
   build_to    "bin"
@@ -81,18 +88,7 @@ namespace "lib" do
       ruby "-S rake lib:build"
     end
   end
-
-  file mini_service_rake do
-    sh "git submodule update --init mini_service"
-  end
 end
-
-task :build => ["lib:mini_service", "test:build"]
-task :run => ["test:run"]
-task :rebuild => ["test:rebuild"]
-task :clobber => ["test:clobber"]
-
-task :default => [:build]
 
 # FIXME: Source code package
 Rake::PackageTask.new(PRODUCT_NAME, PRODUCT_VERSION) do |pkg|
