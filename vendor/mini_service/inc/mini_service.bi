@@ -18,6 +18,7 @@ type MiniService
         Stopped = SERVICE_STOPPED
     end enum
 
+    declare constructor()
     declare constructor(byref as string)
     declare destructor()
 

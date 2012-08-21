@@ -2,7 +2,7 @@ require File.expand_path("rakehelp/freebasic", File.dirname(__FILE__))
 require "rake/packagetask"
 
 PRODUCT_NAME = "mini_service"
-PRODUCT_VERSION = "0.1.1"
+PRODUCT_VERSION = "0.2.0"
 PRODUCT_RELEASE = "#{PRODUCT_NAME}-#{PRODUCT_VERSION}-win32.zip"
 
 defaults = {

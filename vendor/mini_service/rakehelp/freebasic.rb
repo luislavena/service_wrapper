@@ -324,7 +324,7 @@ module FreeBASIC
 
         # now the linking process
         file compiled_project_file do |t|
-          target = File.join(@build_path, @output_name)
+          target = File.join(@build_path, @real_file_name)
           sh fbc_link(target, t.prerequisites, unprocessed_files)
         end
 

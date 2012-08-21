@@ -1,5 +1,10 @@
 #include once "mini_service.bi"
 
+constructor MiniService()
+    '# default constructor as anonymous service
+    constructor("anonymous")
+end constructor
+
 constructor MiniService(byref new_name as string)
     trace("setting up new name")
     _name = new_name
@@ -111,7 +116,7 @@ sub MiniService.execute()
 
         '# perform onInit (if present)
         if not (onInit = 0) then
-            trace("invoking onInit (sync)")
+            trace("invoking onInit (sync) with @ " + hex(@this))
             onInit(@this)
         end if
 
@@ -119,7 +124,7 @@ sub MiniService.execute()
         update_state(SERVICE_RUNNING)
 
         if not (onStart = 0) then
-            trace("invoking onStart (thread)")
+            trace("invoking onStart (thread) with @ " + hex(@this))
             worker = threadcreate(@MiniService.invoke_onStart, @this)
         end if
 
@@ -173,7 +178,7 @@ sub MiniService.invoke_stop()
 
     '# invoke onStop if defined
     if not (onStop = 0) then
-        trace("invoking onStop (sync)")
+        trace("invoking onStop (sync) with @ " + hex(@this))
         onStop(@this)
     end if
 
