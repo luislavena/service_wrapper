@@ -5,6 +5,6 @@ sub custom_assert(byref f as string, byval l as integer, byref func as string, b
 
     handle = freefile()
     open err for output as #handle
-    print #handle, using "&(&): assertion failed at &: &"; f, l, func, expr
+    print #handle, using "&(&): assertion failed at &: &"; f; l; func; expr
     close #handle
 end sub
