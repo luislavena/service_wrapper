@@ -1,3 +1,8 @@
+=== 0.1.1 / 2012-08-21
+
+* Internal
+  * Make usage of FreeBASIC inheritance to cleanup some code
+
 === 0.1.0 / 2011-12-27
 
 * Enhancements
