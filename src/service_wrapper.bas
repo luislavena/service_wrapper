@@ -1,16 +1,16 @@
 #include once "service_wrapper.bi"
 
 constructor ServiceWrapper()
-    trace("initialize base and set callbacks")
-    base = new MiniService("ServiceWrapper")
-    base->onInit = @ServiceWrapper.onInit
-    base->onStart = @ServiceWrapper.onStart
-    base->onStop = @ServiceWrapper.onStop
-    base->extra = @this
+    base("ServiceWrapper")
+
+    trace("set callbacks")
+    base.onInit = @ServiceWrapper.onInit
+    base.onStart = @ServiceWrapper.onStart
+    base.onStop = @ServiceWrapper.onStop
 end constructor
 
 destructor ServiceWrapper()
-    trace("unset everything and delete config, child and base")
+    trace("unset everything and delete config and child")
     if (config) then
         delete config
     end if
@@ -19,25 +19,18 @@ destructor ServiceWrapper()
         delete child
     end if
 
-    base->onInit = 0
-    base->onStart = 0
-    base->onStop = 0
-    base->extra = 0
-    delete base
+    base.onInit = 0
+    base.onStart = 0
+    base.onStop = 0
 end destructor
 
-sub ServiceWrapper.run()
-    trace("base->run()")
-    base->run()
-end sub
-
-sub ServiceWrapper.onInit(byval base as MiniService ptr)
-    var this = cast(ServiceWrapper ptr, base->extra)
+sub ServiceWrapper.onInit(byval service as MiniService ptr)
+    var this = cast(ServiceWrapper ptr, service)
 
     trace("System PATH: " + Environ("PATH"))
 
-    trace("initialize config with file '" + base->command_line + "'")
-    this->config = new ConfigurationFile(base->command_line)
+    trace("initialize config with file '" + this->command_line + "'")
+    this->config = new ConfigurationFile(this->command_line)
     var config = this->config '# shorthand
 
     trace("executable: " + config->executable)
@@ -70,11 +63,11 @@ sub ServiceWrapper.onInit(byval base as MiniService ptr)
     trace("done with onInit")
 end sub
 
-sub ServiceWrapper.onStart(byval base as MiniService ptr)
-    var this = cast(ServiceWrapper ptr, base->extra)
+sub ServiceWrapper.onStart(byval service as MiniService ptr)
+    var this = cast(ServiceWrapper ptr, service)
 
     trace("waiting during the running state")
-    do while (base->state = MiniService.States.Running)
+    do while (this->state = MiniService.States.Running)
         sleep 100
     loop
 
@@ -91,8 +84,8 @@ sub ServiceWrapper.onStart(byval base as MiniService ptr)
     trace("done with onStart")
 end sub
 
-sub ServiceWrapper.onStop(byval base as MiniService ptr)
-    var this = cast(ServiceWrapper ptr, base->extra)
+sub ServiceWrapper.onStop(byval service as MiniService ptr)
+    var this = cast(ServiceWrapper ptr, service)
 
     if (this->child) then
         '# FIXME: ping ServiceManager think we are dead...

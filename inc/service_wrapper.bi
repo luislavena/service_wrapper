@@ -12,14 +12,11 @@
     #define trace(msg)
 #endif
 
-type ServiceWrapper
+type ServiceWrapper extends MiniService
     declare constructor()
     declare destructor()
 
-    declare sub run()
-
 private:
-    base as MiniService ptr
     config as ConfigurationFile ptr
     child as ConsoleProcess ptr
 
